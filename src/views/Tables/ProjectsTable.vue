@@ -10,7 +10,7 @@
           </h3>
         </div>
         <div class="col text-right">
-          <base-button type="primary" size="sm">See all</base-button>
+          <base-button type="primary" size="sm">Add User</base-button>
         </div>
       </div>
     </div>
@@ -22,61 +22,28 @@
                   tbody-classes="list"
                   :data="tableData">
         <template slot="columns">
-          <th>Project</th>
-          <th>Budget</th>
-          <th>Status</th>
-          <th>Users</th>
-          <th>Completion</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Number</th>
+          <th>Address</th>
+          <th>Password</th>
           <th></th>
         </template>
 
         <template slot-scope="{row}">
-          <th scope="row">
-            <div class="media align-items-center">
-              <a href="#" class="avatar rounded-circle mr-3">
-                <img alt="Image placeholder" :src="row.img">
-              </a>
-              <div class="media-body">
-                <span class="name mb-0 text-sm">{{row.title}}</span>
-              </div>
-            </div>
-          </th>
-          <td class="budget">
-            {{row.budget}}
+       
+          <td >
+            {{row.first}} {{row.last}}
           </td>
           <td>
-            <badge class="badge-dot mr-4" :type="row.statusType">
-              <i :class="`bg-${row.statusType}`"></i>
-              <span class="status">{{row.status}}</span>
-            </badge>
+              {{row.email}}
           </td>
           <td>
-            <div class="avatar-group">
-              <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip" data-original-title="Ryan Tompson">
-                <img alt="Image placeholder" src="img/theme/team-1-800x800.jpg">
-              </a>
-              <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip" data-original-title="Romina Hadid">
-                <img alt="Image placeholder" src="img/theme/team-2-800x800.jpg">
-              </a>
-              <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip" data-original-title="Alexander Smith">
-                <img alt="Image placeholder" src="img/theme/team-3-800x800.jpg">
-              </a>
-              <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip" data-original-title="Jessica Doe">
-                <img alt="Image placeholder" src="img/theme/team-4-800x800.jpg">
-              </a>
-            </div>
+             {{row.number}}
           </td>
-
+           {{row.address}}
           <td>
-            <div class="d-flex align-items-center">
-              <span class="completion mr-2">{{row.completion}}%</span>
-              <div>
-                <base-progress :type="row.statusType"
-                               :show-percentage="false"
-                               class="pt-0"
-                               :value="row.completion"/>
-              </div>
-            </div>
+              {{row.password}}
           </td>
 
           <td class="text-right">
@@ -87,9 +54,8 @@
               </a>
 
               <template>
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <a class="dropdown-item" href="#">Something else here</a>
+                <a class="dropdown-item" href="#">Update Details</a>
+                <a class="dropdown-item" href="#">Delete User</a>
               </template>
             </base-dropdown>
           </td>
@@ -118,45 +84,37 @@
     data() {
       return {
         tableData: [
-          {
-            img: 'img/theme/bootstrap.jpg',
-            title: 'Argon Design System',
-            budget: '$2500 USD',
-            status: 'pending',
-            statusType: 'warning',
-            completion: 60
+           {
+            first: 'Ade',
+            last: 'Jognson',
+            email: 'mail@yahoo.com',
+            number: '0923218994',
+            address: 'Lagos',
+            password: 'happyPl'
           },
-          {
-            img: 'img/theme/angular.jpg',
-            title: 'Angular Now UI Kit PRO',
-            budget: '$1800 USD',
-            status: 'completed',
-            statusType: 'success',
-            completion: 100
+           {
+            first: 'Ade',
+            last: 'Johnson',
+            email: 'mail@yahoo.com',
+            number: '0923218994',
+            address: 'Lagos',
+            password: 'happyPl'
           },
-          {
-            img: 'img/theme/sketch.jpg',
-            title: 'Black Dashboard',
-            budget: '$3150 USD',
-            status: 'delayed',
-            statusType: 'danger',
-            completion: 72
+             {
+            first: 'Mide',
+            last: 'Jognson',
+            email: 'mail@yahoo.com',
+            number: '0923218994',
+            address: 'Lagos',
+            password: 'happyPl'
           },
-          {
-            img: 'img/theme/react.jpg',
-            title: 'React Material Dashboard',
-            budget: '$4400 USD',
-            status: 'on schedule',
-            statusType: 'info',
-            completion: 90
-          },
-          {
-            img: 'img/theme/vue.jpg',
-            title: 'Vue Paper UI Kit PRO',
-            budget: '$2200 USD',
-            status: 'completed',
-            statusType: 'success',
-            completion: 100
+             {
+            first: 'Loveth',
+            last: 'John',
+            email: 'mail@yahoo.com',
+            number: '0923218994',
+            address: 'Lagos',
+            password: 'happyPl'
           }
         ]
       }

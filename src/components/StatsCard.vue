@@ -1,5 +1,5 @@
 <template>
-  <card class="card-stats" :show-footer-line="true">
+  <card class="card-stats" >
     <div class="row">
 
       <div class="col">
@@ -19,11 +19,11 @@
       </div>
     </div>
 
-    <p class="mt-3 mb-0 text-sm">
+    <!-- <p class="mt-3 mb-0 text-sm">
       <slot name="footer">
 
       </slot>
-    </p>
+    </p> -->
   </card>
 </template>
 <script>
