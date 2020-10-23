@@ -30,15 +30,10 @@
                     </form>
                 </div>
             </div>
-            <div class="row mt-3">
-                <div class="col-6">
-                    <a href="#" class="text-light">
-                        <small>Forgot password?</small>
-                    </a>
-                </div>
-                <div class="col-6 text-right">
+            <div class="row mt-3 justify-content-center">
+                <div class="col text-right">
                     <router-link to="/login" class="text-light">
-                        <small>Login into your account</small>
+                        <small>Log in into your account</small>
                     </router-link>
                 </div>
             </div>
