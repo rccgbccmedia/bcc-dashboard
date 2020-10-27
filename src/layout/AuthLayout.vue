@@ -5,7 +5,7 @@
                   containerClasses="px-4 container"
                   expand>
             <router-link slot="brand" class="navbar-brand" to="/">
-                <img src="img/brand/white.png"/>
+                <img src="img/brand/RCCG-WEB.png" class="rccgImg"/>
             </router-link>
 
             <template v-slot="{closeMenu}">
@@ -14,7 +14,7 @@
                     <div class="row">
                         <div class="col-6 collapse-brand">
                             <router-link to="/">
-                                <img src="img/brand/green.png">
+                                <img src="img/brand/RCCG-WEB.png" class="rccgImg">
                             </router-link>
                         </div>
                         <div class="col-6 collapse-close">
@@ -34,12 +34,6 @@
                         <router-link class="nav-link nav-link-icon" to="/">
                             <i class="ni ni-planet"></i>
                             <span class="nav-link-inner--text">Dashboard</span>
-                        </router-link>
-                    </li>
-                    <li class="nav-item">
-                        <router-link class="nav-link nav-link-icon" to="/register">
-                            <i class="ni ni-circle-08"></i>
-                            <span class="nav-link-inner--text">Register</span>
                         </router-link>
                     </li>
                     <li class="nav-item">
@@ -100,4 +94,7 @@
   }
 </script>
 <style>
+img.rccgImg, .collapse-brand img{
+  transform: scale(1.4);
+}
 </style>

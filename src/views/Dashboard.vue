@@ -28,7 +28,7 @@
             <!--Tables-->
             <div class="row">
                 <div class="col">
-                    <projects-table type="dark" title="All Regsitered Users"></projects-table>
+                    <projects-table type="dark" title="All Regsitered Users" :tableData='tableData' :heads='columns'></projects-table>
                 </div>
             </div>
             <!--End tables-->
@@ -45,7 +45,41 @@
     },
     data() {
       return {
-      
+        columns: ['Name', 'Email', 'Number', 'Address', 'Password', ' '],
+         tableData: [
+           {
+            first: 'Ade',
+            last: 'Jognson',
+            email: 'mail@yahoo.com',
+            number: '0923218994',
+            address: 'Lagos',
+            password: 'happyPl'
+          },
+           {
+            first: 'Ade',
+            last: 'Johnson',
+            email: 'mail@yahoo.com',
+            number: '0923218994',
+            address: 'Lagos',
+            password: 'happyPl'
+          },
+             {
+            first: 'Mide',
+            last: 'Jognson',
+            email: 'mail@yahoo.com',
+            number: '0923218994',
+            address: 'Lagos',
+            password: 'happyPl'
+          },
+             {
+            first: 'Loveth',
+            last: 'John',
+            email: 'mail@yahoo.com',
+            number: '0923218994',
+            address: 'Lagos',
+            password: 'happyPl'
+          }
+        ]
       };
     },
     methods: {

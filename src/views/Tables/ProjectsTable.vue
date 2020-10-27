@@ -21,13 +21,8 @@
                   :thead-classes="type === 'dark' ? 'thead-dark': 'thead-light'"
                   tbody-classes="list"
                   :data="tableData">
-        <template slot="columns">
-          <th>Name</th>
-          <th>Email</th>
-          <th>Number</th>
-          <th>Address</th>
-          <th>Password</th>
-          <th></th>
+        <template slot="columns" v-for="item in heads">
+          <th :key="item">{{item}}</th>
         </template>
 
         <template slot-scope="{row}">
@@ -64,11 +59,11 @@
 
       </base-table>
     </div>
-
+<!-- 
     <div class="card-footer d-flex justify-content-end"
          :class="type === 'dark' ? 'bg-transparent': ''">
       <base-pagination total="30"></base-pagination>
-    </div>
+    </div> -->
 
   </div>
 </template>
@@ -79,44 +74,16 @@
       type: {
         type: String
       },
-      title: String
+      title: String,
+      tableData : {
+        type: Array
+      },
+      heads: {
+        type: Array
+      }
     },
     data() {
       return {
-        tableData: [
-           {
-            first: 'Ade',
-            last: 'Jognson',
-            email: 'mail@yahoo.com',
-            number: '0923218994',
-            address: 'Lagos',
-            password: 'happyPl'
-          },
-           {
-            first: 'Ade',
-            last: 'Johnson',
-            email: 'mail@yahoo.com',
-            number: '0923218994',
-            address: 'Lagos',
-            password: 'happyPl'
-          },
-             {
-            first: 'Mide',
-            last: 'Jognson',
-            email: 'mail@yahoo.com',
-            number: '0923218994',
-            address: 'Lagos',
-            password: 'happyPl'
-          },
-             {
-            first: 'Loveth',
-            last: 'John',
-            email: 'mail@yahoo.com',
-            number: '0923218994',
-            address: 'Lagos',
-            password: 'happyPl'
-          }
-        ]
       }
     }
   }

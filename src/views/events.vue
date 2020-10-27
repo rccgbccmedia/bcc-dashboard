@@ -162,20 +162,52 @@
         </baseModal>
         <!-- Create Modal End -->
         <!-- Modals end -->
+         <div class="container-fluid mt-5">
+            <!--Tables-->
+            <div class="row">
+                <div class="col">
+                    <projects-table type="dark" title="All Regsitered Users" :tableData='data' :heads='heads'>
+                    </projects-table>
+                </div>
+            </div>
+            <!--End tables-->
+        </div>
 </div>
 </template>
 <script>
  import theCard from '../components/Card'
   import baseModal from '../components/Modal'
+    import ProjectsTable from './Tables/ProjectsTable'
   export default {
     name: 'events-page',
      components: {
-      theCard, baseModal
+      theCard, baseModal, ProjectsTable
     },
     data() {
       return {
         show: false,
         editShow: false,
+        heads: ['Name', 'Age', 'Gender', 'Type', ' '],
+        data: [
+              {
+            first: 'Ade',
+            last: 'Jognson',
+            email: 'mail@yahoo.com',
+            number: '0923218994'
+          },
+           {
+            first: 'Ade',
+            last: 'Johnson',
+            email: 'mail@yahoo.com',
+            number: '0923218994'
+          },
+             {
+            first: 'Mide',
+            last: 'Jognson',
+            email: 'mail@yahoo.com',
+            number: '0923218994'
+          }
+        ],
         createShow: false,
         newEventDetails: {
           name: '',

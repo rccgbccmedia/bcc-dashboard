@@ -62,7 +62,7 @@
     props: {
       logo: {
         type: String,
-        default: 'img/brand/green.png',
+        default: 'img/brand/RCCG-WEB.png',
         description: 'Sidebar app logo'
       },
       autoClose: {
@@ -91,3 +91,8 @@
     }
   };
 </script>
+<style>
+.navbar-brand img {
+  transform: scale(2);
+}
+</style>
