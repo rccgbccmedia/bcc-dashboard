@@ -39,6 +39,7 @@
 <script>
   // Charts
   import ProjectsTable from './Tables/ProjectsTable'
+  import axios from 'axios'
   export default {
     components: {
       ProjectsTable
@@ -83,10 +84,24 @@
       };
     },
     methods: {
-
+      fetchAllUserDetails () {
+        let val =  sessionStorage.getItem('accessToken')
+        console.log({val})
+        axios.get('https://bcc-backend.herokuapp.com/events/all/',
+          {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}`
+        }
+        }).then((result) => {
+          console.log(result)
+        }).catch((err)=>{
+          console.log(err)
+        })
+      }
     },
     mounted() {
-     
+      this.fetchAllUserDetails()
     }
   };
 </script>

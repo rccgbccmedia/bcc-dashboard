@@ -33,8 +33,8 @@
      </base-header>
      <div class="container-fluid">
             <!--Event Card-->
-            <div class="row">
-                <div class="col">
+              <div class="row row-cols-1 row-cols-md-2 justify-content-center">
+                <div class="col-sm-10 col-md-5 mb-4">
                    <theCard gradient='blue' shadow='true' hover='true' class="mt-3 pt-3">
                       <template v-slot:header>
                         <h1 class="lead">Midweek Communion Service</h1>
@@ -46,14 +46,14 @@
                           <h3><strong>Capacity: </strong>5,000</h3>
                       </template>
                        <template v-slot:footer>
-                        <div class="row justify-content-space-between">
-                            <button class="btn border bg-gradient-warning text-light" @click="deleteEvent(id)">Delete</button>
-                            <button class="btn border bg-gradient-info text-light" @click="updateEvent(id)">Edit</button>
+                        <div class="row justify-content-between">
+                            <button class="col btn border bg-gradient-warning text-light" @click="deleteEvent(id)">Delete</button>
+                            <button class="col btn border bg-gradient-info text-light" @click="updateEvent(id)">Edit</button>
                         </div>
                       </template>
                    </theCard>
                 </div>
-                 <div class="col">
+                 <div class="col-sm-10 col-md-5 mb-4">
                     <theCard gradient='blue' shadow='true' hover='true' class="mt-3 pt-3">
                       <template v-slot:header>
                         <h1 class="lead">Midweek Communion Service</h1>
@@ -65,9 +65,9 @@
                         <h3><strong>Capacity: </strong>5,000</h3>
                       </template>
                        <template v-slot:footer>
-                        <div class="row justify-content-space-between">
-                            <button class="btn border bg-gradient-warning text-light" @click="deleteEvent(id)">Delete</button>
-                             <button class="btn border bg-gradient-info text-light" @click="updateEvent(id)">Edit</button>
+                        <div class="row justify-content-between">
+                            <button class="btn col border bg-gradient-warning text-light" @click="deleteEvent(id)">Delete</button>
+                             <button class="btn col border bg-gradient-info text-light" @click="updateEvent(id)">Edit</button>
                         </div>
                       </template>
                    </theCard>
