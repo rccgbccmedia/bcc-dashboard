@@ -15,7 +15,7 @@
                 <div class="col-xl-3 col-lg-6"  title="View all Events">
                     <stats-card title="Total Events"
                                 type="gradient-green"
-                                sub-title="26"
+                                :sub-title="totalEvents"
                                 icon="ni ni-building"
                                 class="mb-4 mb-xl-0"
                     >
@@ -28,7 +28,7 @@
             <!--Tables-->
             <div class="row">
                 <div class="col">
-                    <projects-table type="dark" title="All Regsitered Users" :tableData='tableData' :heads='columns'></projects-table>
+                    <projects-table type="dark" title="All Regsitered Users" :tableData='returnedEvents' :heads='columns'></projects-table>
                 </div>
             </div>
             <!--End tables-->
@@ -39,7 +39,7 @@
 <script>
   // Charts
   import ProjectsTable from './Tables/ProjectsTable'
-  import axios from 'axios'
+ // import axios from 'axios'
   export default {
     components: {
       ProjectsTable
@@ -85,23 +85,14 @@
     },
     methods: {
       fetchAllUserDetails () {
-        let val =  sessionStorage.getItem('accessToken')
-        console.log({val})
-        axios.get('https://bcc-backend.herokuapp.com/events/all/',
-          {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}`
-        }
-        }).then((result) => {
-          console.log(result)
-        }).catch((err)=>{
-          console.log(err)
-        })
+       
       }
     },
+    computed: {
+    
+    },
     mounted() {
-      this.fetchAllUserDetails()
+    //  this.fetchAllUserDetails()
     }
   };
 </script>

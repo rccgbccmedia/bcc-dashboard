@@ -15,7 +15,7 @@
                <div class="col-xl-3 col-lg-6">
                <stats-card title="Total Events"
                               type="gradient-primary"
-                              sub-title="2"
+                              :sub-title="totalEvents"
                               icon="ni ni-building"
                               class="mb-4 mb-xl-0"
                >
@@ -35,7 +35,7 @@
             <!--Event Card-->
               <div class="row row-cols-1 row-cols-md-2 justify-content-center">
                 <div class="col-sm-10 col-md-5 mb-4">
-                   <theCard gradient='blue' shadow='true' hover='true' class="mt-3 pt-3">
+                   <theCard gradient='blue' :shadow='shadow' :hover='shadow' class="mt-3 pt-3">
                       <template v-slot:header>
                         <h1 class="lead">Midweek Communion Service</h1>
                       </template>
@@ -54,7 +54,7 @@
                    </theCard>
                 </div>
                  <div class="col-sm-10 col-md-5 mb-4">
-                    <theCard gradient='blue' shadow='true' hover='true' class="mt-3 pt-3">
+                    <theCard gradient='blue' :shadow='shadow' :hover='shadow' class="mt-3 pt-3">
                       <template v-slot:header>
                         <h1 class="lead">Midweek Communion Service</h1>
                       </template>
@@ -128,7 +128,7 @@
             <div class="text-light">
               <form role="form">
                   <base-input class="input-group-alternative mb-3"
-                              placeholder="Event Name"
+                              placeholder="Event Name" required
                               addon-left-icon="ni ni-caps-small"
                               v-model="newEventDetails.name">
                   </base-input>
@@ -138,12 +138,12 @@
                               v-model="newEventDetails.location">
                   </base-input>
                    <base-input class="input-group-alternative mb-3"
-                              placeholder="Event Description"
+                              placeholder="Event Description" required
                               addon-left-icon="ni ni-align-left-2"
                               v-model="newEventDetails.description">
                   </base-input>
                   <base-input class="input-group-alternative mb-3"
-                              placeholder="Event Time"
+                              placeholder="Event Time" required
                               addon-left-icon="ni ni-watch-time"
                               v-model="newEventDetails.time">
                   </base-input>
@@ -151,6 +151,16 @@
                               placeholder="Event Capacity"
                               addon-left-icon="ni ni-single-02"
                               v-model="newEventDetails.capacity">
+                  </base-input>
+                  <base-input class="input-group-alternative mb-3"
+                              placeholder="Available Seats"
+                              addon-left-icon="ni ni-tag"
+                              v-model="newEventDetails.seats">
+                  </base-input>
+                  <base-input class="input-group-alternative mb-3"
+                              placeholder="Link to Image"
+                              addon-left-icon="ni ni-camera-compact"
+                              v-model="newEventDetails.photo">
                   </base-input>
               </form>
             </div>
@@ -162,60 +172,40 @@
         </baseModal>
         <!-- Create Modal End -->
         <!-- Modals end -->
-         <div class="container-fluid mt-5">
-            <!--Tables-->
-            <div class="row">
-                <div class="col">
-                    <projects-table type="dark" title="All Regsitered Users" :tableData='data' :heads='heads'>
-                    </projects-table>
-                </div>
-            </div>
-            <!--End tables-->
-        </div>
+ 
 </div>
 </template>
 <script>
  import theCard from '../components/Card'
   import baseModal from '../components/Modal'
-    import ProjectsTable from './Tables/ProjectsTable'
+  import axios from 'axios'
   export default {
     name: 'events-page',
      components: {
-      theCard, baseModal, ProjectsTable
+      theCard, baseModal
     },
     data() {
       return {
         show: false,
         editShow: false,
-        heads: ['Name', 'Age', 'Gender', 'Type', ' '],
-        data: [
-              {
-            first: 'Ade',
-            last: 'Jognson',
-            email: 'mail@yahoo.com',
-            number: '0923218994'
-          },
-           {
-            first: 'Ade',
-            last: 'Johnson',
-            email: 'mail@yahoo.com',
-            number: '0923218994'
-          },
-             {
-            first: 'Mide',
-            last: 'Jognson',
-            email: 'mail@yahoo.com',
-            number: '0923218994'
-          }
-        ],
+        returnedEvents: [],
         createShow: false,
+        shadow: true,
         newEventDetails: {
           name: '',
           location: '',
           description: '',
           time: '',
-          capacity: ''
+          capacity: '',
+          seats: '',
+          photo: ''
         }
+      }
+    },
+    computed: {
+      totalEvents: function() {
+        let list = this.returnedEvents.length
+        return list
       }
     },
     methods : {
@@ -223,8 +213,48 @@
          this.show = !this.show
         console.log('Delete')
        },
+       fetchEvents () {
+          let val =  sessionStorage.getItem('accessToken')
+        console.log({val})
+        axios.get('https://bcc-backend.herokuapp.com/events/all/',
+          {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${sessionStorage.getItem('accessToken')}`
+        }
+        }).then((result) => {
+          console.log(result)
+          this.returnedEvents = result.data
+        }).catch((err)=>{
+          console.log(err)
+        })
+       },
        createSingleEvent () {
-
+           if(this.newEventDetails.name!=='' && this.newEventDetails.time!=='' && this.newEventDetails.description!==''){
+             console.log(sessionStorage.getItem('accessToken'))
+            axios.post('https://bcc-backend.herokuapp.com/events/create/',
+            {
+              'name': this.newEventDetails.name,
+              'venue': this.newEventDetails.venue,
+              'time': this.newEventDetails.time,
+              'capacity': this.newEventDetails.capacity,
+              'seats': this.newEventDetails.seats,
+              'description': this.newEventDetails.description,
+              'photo_url': this.newEventDetails.photo
+            },
+          {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}`
+        }
+        }).then((val)=>{
+          console.log(val)
+        }).catch((err)=>{
+          console.log(err)
+        })
+        } else {
+           console.log('Go away')
+        }
        },
        updateSingleEvent () {
          let name = document.querySelector('.eventTitle').innerHTML

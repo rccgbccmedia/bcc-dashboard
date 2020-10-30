@@ -26,15 +26,41 @@
          <div class="container-fluid">
             <!--Event Card-->
               <div class="row row-cols-1 row-cols-md-2 justify-content-center">
-                <div class="col-sm-10 col-md-5 mb-4">
-                   <theCard gradient='light' shadow='true' hover='true' class="mt-3 pt-3">
+                <div class="col-sm-10 col-md-4 mb-4">
+                   <theCard gradient="light" shadow='true' hover='true' :class="{'mt-3':true , 'pt-3': true}">
+                       <template>
+                         <img src="https://drive.google.com/uc?id=1H8upJ-vM3lAeEcEiB3wTRgE5ZiYH_kl-" class="card-img-top">
+                      </template>
+                       <template v-slot:footer>
+                        <div class="row justify-content-between">
+                            <button class="col-sm-4 btn btn-sm border bg-gradient-danger text-light" @click="deleteImage(id)">Delete</button>
+                             <base-switch :value='val' ></base-switch>   
+                        </div>
+                      </template>
+                   </theCard>
+                </div>
+                 <div class="col-sm-10 col-md-4 mb-4">
+                   <theCard gradient="light" shadow='true' hover='true' :class="{'mt-3':true , 'pt-3': true}">
                        <template>
                          <img src="https://drive.google.com/uc?id=1u4YrtR6jOX1FoTvgMPuNu5CpJDr-Lrpl" class="card-img-top">
                       </template>
                        <template v-slot:footer>
                         <div class="row justify-content-between">
-                            <button class="col-sm-4 btn btn-sm border bg-gradient-danger text-light" @click="deleteEvent(id)">Delete</button>
-                             <base-switch v-model="val"></base-switch>   
+                            <button class="col-sm-4 btn btn-sm border bg-gradient-danger text-light" @click="deleteImage(id)">Delete</button>
+                             <base-switch :value='val' ></base-switch>   
+                        </div>
+                      </template>
+                   </theCard>
+                </div>
+                 <div class="col-sm-10 col-md-4 mb-4">
+                   <theCard gradient="light" shadow='true' hover='true' :class="{'mt-3':true , 'pt-3': true}">
+                       <template>
+                         <img src="https://drive.google.com/uc?id=1u4YrtR6jOX1FoTvgMPuNu5CpJDr-Lrpl" class="card-img-top">
+                      </template>
+                       <template v-slot:footer class="card-img-overlay">
+                        <div class="row justify-content-between">
+                            <button class="col-sm-4 btn btn-sm border bg-gradient-danger text-light" @click="deleteImage(id)">Delete</button>
+                             <base-switch :value='val' ></base-switch>   
                         </div>
                       </template>
                    </theCard>
@@ -53,8 +79,15 @@
     },
      data() {
       return {
-          val: false
+          val: true
       }
+     },
+     mounted () {
+     },
+     methods: {
+      //  deleteImage (imageId) {
+
+      //  }
      }
   };
 </script>
