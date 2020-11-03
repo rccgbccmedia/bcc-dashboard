@@ -21,6 +21,8 @@ import router from './router'
 import './registerServiceWorker'
 import ArgonDashboard from './plugins/argon-dashboard'
 
+export const EventBus = new Vue();
+
 Vue.config.productionTip = false
 
 Vue.use(ArgonDashboard)

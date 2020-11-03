@@ -15,7 +15,7 @@
                 <div class="col-xl-3 col-lg-6"  title="View all Events">
                     <stats-card title="Total Events"
                                 type="gradient-green"
-                                :sub-title="totalEvents"
+                                :sub-title="totalEvents.length"
                                 icon="ni ni-building"
                                 class="mb-4 mb-xl-0"
                     >
@@ -28,25 +28,35 @@
             <!--Tables-->
             <div class="row">
                 <div class="col">
-                    <projects-table type="dark" title="All Regsitered Users" :tableData='returnedEvents' :heads='columns'></projects-table>
+                    <!-- <projects-table type="dark" title="All Regsitered Users" :tableData='returnedEvents' :heads='columns'></projects-table> -->
                 </div>
             </div>
             <!--End tables-->
         </div>
-
+  <!-- Loading modal start -->
+         <baseModal :show='isLoading' v-on:close="closing" class="text-center" gradient="secondary">
+          <template>
+            <img src="../assets/loader.gif">
+          </template>
+        </baseModal>
+        <!-- Loading Modal end -->
     </div>
 </template>
 <script>
   // Charts
-  import ProjectsTable from './Tables/ProjectsTable'
- // import axios from 'axios'
+ // import ProjectsTable from './Tables/ProjectsTable'
+  import axios from 'axios'
+   import baseModal from '../components/Modal'
   export default {
     components: {
-      ProjectsTable
+      baseModal
+      // ProjectsTable
     },
     data() {
       return {
-        columns: ['Name', 'Email', 'Number', 'Address', 'Password', ' '],
+        columns: ['Name', 'Email', 'Number', 'Address', ' '],
+        isLoading: false,
+        totalEvents: [],
          tableData: [
            {
             first: 'Ade',
@@ -86,14 +96,38 @@
     methods: {
       fetchAllUserDetails () {
        
-      }
+      },
+         fetchEvents () {
+           this.isLoading = true
+        axios.get('https://bcc-backend.herokuapp.com/events/all/',
+          {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${sessionStorage.getItem('accessToken')}`
+        }
+        }).then((result) => {
+          console.log(result)
+          this.totalEvents = result.data
+        }).catch((err)=>{
+          console.log(err)
+          // Custom error message should come here
+            this.$router.push('login')
+        }).finally(()=>{
+           this.isLoading = false
+        })
+       }
     },
     computed: {
     
     },
     mounted() {
     //  this.fetchAllUserDetails()
+    this.fetchEvents()
     }
   };
 </script>
-<style></style>
+<style>
+.modal.show{
+  background-color: aliceblue;
+}
+</style>

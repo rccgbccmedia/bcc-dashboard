@@ -67,19 +67,27 @@
                 </div>
               </div>
          </div>
-
+  <!-- Loading modal start -->
+         <baseModal :show='isLoading' v-on:close="closing" class="text-center" gradient="secondary">
+          <template>
+            <img src="../assets/loader.gif">
+          </template>
+        </baseModal>
+        <!-- Loading Modal end -->
     </div>
 </template>
 <script>
   import theCard from '../components/Card'
+  import baseModal from '../components/Modal'
   export default {
     name: 'gallery',
     components: {
-      theCard
+      theCard, baseModal
     },
      data() {
       return {
-          val: true
+          val: true,
+          isLoading: false
       }
      },
      mounted () {

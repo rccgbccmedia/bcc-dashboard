@@ -34,62 +34,66 @@
      <div class="container-fluid">
             <!--Event Card-->
               <div class="row row-cols-1 row-cols-md-2 justify-content-center">
-                <div class="col-sm-10 col-md-5 mb-4">
+                <template v-for="event in returnedEvents">
+                    <div class="col-sm-10 col-md-5 mb-4" :key="event.id">
                    <theCard gradient='blue' :shadow='shadow' :hover='shadow' class="mt-3 pt-3">
                       <template v-slot:header>
-                        <h1 class="lead">Midweek Communion Service</h1>
+                        <h1 class="lead">{{event.name}}</h1>
                       </template>
                        <template>
-                        <h3><strong>Venue: </strong>Church Auditorium </h3>
-                        <h3><strong>Description: </strong>Null </h3>
-                         <h3><strong>Time: </strong>9am </h3>
-                          <h3><strong>Capacity: </strong>5,000</h3>
+                        <h3><strong>Venue: </strong>{{event.venue}}</h3>
+                        <h3><strong>Description: </strong>{{event.description}} </h3>
+                         <h3><strong>Time: </strong>{{formatter(event.time)}} </h3>
+                          <h3><strong>Capacity: </strong>{{event.capacity}}</h3>
+                          <div v-show="event.photo_url">
+                            <button class="btn border bg-gradient-primary text-light" @click="showEventPic(event.photo_url)">Photo</button>
+                          </div>
                       </template>
                        <template v-slot:footer>
                         <div class="row justify-content-between">
-                            <button class="col btn border bg-gradient-warning text-light" @click="deleteEvent(id)">Delete</button>
-                            <button class="col btn border bg-gradient-info text-light" @click="updateEvent(id)">Edit</button>
+                            <button class="col btn border bg-gradient-warning text-light" @click="deleteEvent(event)">Delete</button>
+                            <button class="col btn border bg-gradient-info text-light" @click="updateEvent(event)">Edit</button>
                         </div>
                       </template>
                    </theCard>
                 </div>
-                 <div class="col-sm-10 col-md-5 mb-4">
-                    <theCard gradient='blue' :shadow='shadow' :hover='shadow' class="mt-3 pt-3">
-                      <template v-slot:header>
-                        <h1 class="lead">Midweek Communion Service</h1>
-                      </template>
-                       <template>
-                        <h3><strong>Venue: </strong>Church Auditorium </h3>
-                        <h3><strong>Description: </strong>Null </h3>
-                        <h3 ><strong>Time: </strong>9am </h3>
-                        <h3><strong>Capacity: </strong>5,000</h3>
-                      </template>
-                       <template v-slot:footer>
-                        <div class="row justify-content-between">
-                            <button class="btn col border bg-gradient-warning text-light" @click="deleteEvent(id)">Delete</button>
-                             <button class="btn col border bg-gradient-info text-light" @click="updateEvent(id)">Edit</button>
-                        </div>
-                      </template>
-                   </theCard>
-                </div>
+                </template>
             </div>
             <!--Event Card-->
         </div>
         <!-- Modals start -->
+        <!-- Loading modal start -->
+         <baseModal :show='isLoading' v-on:close="closing" class="text-center" gradient="secondary">
+          <template>
+            <img src="../assets/loader.gif">
+          </template>
+        </baseModal>
+        <!-- Loading Modal end -->
+        <!-- Picture Modal start-->
+         <baseModal :show='pictureShow' v-on:close="closing" class="text-center" gradient="secondary">
+          <template>
+            <theCard gradient="transparent" shadow='true' hover='true' :class="{'mt-3':true , 'pt-3': true}">
+              <template>
+                <img :src="pictureUrl" class="card-img-top">
+            </template>
+              </theCard>
+          </template>
+        </baseModal>
+        <!-- Picture Modal end -->
         <!-- Delete modal start -->
         <baseModal :show='show' v-on:close="closing" class="text-center" gradient="secondary">
           <template v-slot:header>
              <h2 class="text-center mx-auto">Are you sure? View the details below</h2>    
           </template>
           <template>
-            <h1 class="lead">Midweek Communion Service</h1>
-             <h3><strong>Venue: </strong>Church Auditorium </h3>
-              <h3><strong>Description: </strong>Null </h3>
-              <h3 ><strong>Time: </strong>9am </h3>
-              <h3><strong>Capacity: </strong>5,000</h3>  
+            <h1 class="lead">{{selectedEventDetails.name}}</h1>
+             <h3><strong>Venue: </strong>{{selectedEventDetails.location}} </h3>
+              <h3><strong>Description: </strong>{{selectedEventDetails.description}} </h3>
+              <h3 ><strong>Time: </strong>{{selectedEventDetails.time}} </h3>
+              <h3><strong>Capacity: </strong>{{selectedEventDetails.capacity}} </h3>  
           </template>
           <template v-slot:footer>
-               <button class="btn border bg-gradient-warning text-light" @click="deleteSingleEvent(id)">Delete Event</button>
+               <button class="btn border bg-gradient-warning text-light" @click="deleteSingleEvent(selectedEventDetails.id)">Delete Event</button>
                 <button class="btn border bg-gradient-info text-light" @click="closing">Go Back</button>
             </template>
         </baseModal>
@@ -99,22 +103,42 @@
           <template v-slot:header>
             <div class="row justify-content-center ml-4"><h2 class="w-100 text-center mx-auto text-warning">You can update event details </h2><small class="w-100 text-light">Simply click to edit fields</small></div>
           </template>
-          <template >
+          <template  >
             <div class="text-light">
-                <h3 class="text-light">Event Title :</h3>
-                <h1 class="text-primary eventTitle" contenteditable>Midweek Communion Service</h1>
-               <h3 class="text-light">Venue: </h3>
-               <h1 class="text-primary eventLocation" contenteditable>Church Auditorium </h1>
-               <h3 class="text-light">Description: </h3>
-               <h1 class="text-primary eventDescription" contenteditable>Null </h1>
-                <h3 class="text-light">Time: </h3>
-               <h1 class="text-primary eventTime" contenteditable>9am </h1>
-               <h3 class="text-light">Capacity: </h3>
-               <h1 class="text-primary eventCapacity" contenteditable>5,000 </h1>
+                 <base-input class="input-group-alternative mb-3"
+                              :placeholder="selectedEventDetails.name" required
+                              addon-left-icon="ni ni-caps-small"
+                              v-model="oldEventDetails.name">
+                  </base-input>
+                  <base-input class="input-group-alternative mb-3"
+                              :placeholder="selectedEventDetails.location"
+                              addon-left-icon="ni ni-square-pin"
+                              v-model="oldEventDetails.location">
+                  </base-input>
+                  <base-input class="input-group-alternative mb-3"
+                              :placeholder="selectedEventDetails.description" required
+                              addon-left-icon="ni ni-align-left-2"
+                              v-model="oldEventDetails.description">
+                  </base-input>
+                  <base-input class="input-group-alternative mb-3"
+                              :placeholder="selectedEventDetails.time" required
+                              addon-left-icon="ni ni-watch-time"
+                              v-model="oldEventDetails.time">
+                  </base-input>
+                <base-input class="input-group-alternative mb-3"
+                              :placeholder="selectedEventDetails.capacity"
+                              addon-left-icon="ni ni-single-02"
+                              v-model="oldEventDetails.capacity">
+                  </base-input>
+                  <base-input class="input-group-alternative mb-3"
+                              :placeholder="selectedEventDetails.photo"
+                              addon-left-icon="ni ni-camera-compact"
+                              v-model="oldEventDetails.photo_url">
+                  </base-input>
             </div>
           </template>
           <template v-slot:footer>
-               <button class="btn border bg-gradient-warning text-light" @click="updateSingleEvent(id)">Update Event</button>
+               <button class="btn border bg-gradient-warning text-light" @click="updateSingleEvent(selectedEventDetails.id)">Update Event</button>
                 <button class="btn border bg-gradient-info text-light" @click="closing">Go Back</button>
             </template>
         </baseModal>
@@ -155,6 +179,7 @@
                   <base-input class="input-group-alternative mb-3"
                               placeholder="Available Seats"
                               addon-left-icon="ni ni-tag"
+                              readonly
                               v-model="newEventDetails.seats">
                   </base-input>
                   <base-input class="input-group-alternative mb-3"
@@ -179,6 +204,7 @@
  import theCard from '../components/Card'
   import baseModal from '../components/Modal'
   import axios from 'axios'
+  import moment from 'moment'
   export default {
     name: 'events-page',
      components: {
@@ -188,9 +214,31 @@
       return {
         show: false,
         editShow: false,
+        pictureShow: false,
+        pictureUrl: '',
         returnedEvents: [],
+        selectedEventDetails: {
+          id: '',
+          name: '',
+          location: '',
+          description: '',
+          time: '',
+          capacity: '',
+          seats: '',
+          photo: ''
+        },
+        isLoading: false,
         createShow: false,
         shadow: true,
+        oldEventDetails: {
+           name: '',
+          location: '',
+          description: '',
+          time: '',
+          capacity: '',
+          seats: '',
+          photo_url: ''
+        },
         newEventDetails: {
           name: '',
           location: '',
@@ -209,13 +257,18 @@
       }
     },
     methods : {
-       deleteEvent () {
+       formatter(date) {
+         let theDate = date.split('T')
+         console.log(theDate)
+      return moment().format(theDate[0])
+    },
+       deleteEvent (event) {
          this.show = !this.show
+        this.localEventUpdate(event)
         console.log('Delete')
        },
        fetchEvents () {
-          let val =  sessionStorage.getItem('accessToken')
-        console.log({val})
+        this.isLoading = true
         axios.get('https://bcc-backend.herokuapp.com/events/all/',
           {
         headers: {
@@ -227,6 +280,8 @@
           this.returnedEvents = result.data
         }).catch((err)=>{
           console.log(err)
+        }).finally(()=>{
+           this.isLoading = false
         })
        },
        createSingleEvent () {
@@ -256,34 +311,87 @@
            console.log('Go away')
         }
        },
-       updateSingleEvent () {
-         let name = document.querySelector('.eventTitle').innerHTML
-         let location = document.querySelector('.eventLocation').innerHTML
-         let description = document.querySelector('.eventDescription').innerHTML
-         let time = document.querySelector('.eventTime').innerHTML
-         let capacity = document.querySelector('.eventCapacity').innerHTML
-         console.log({name, location, description, time, capacity})
+       updateSingleEvent (id) {
+         this.isLoading = true
+         let updateDetails = {
+           
+        } 
+        for(let kel in this.oldEventDetails){
+          if(this.oldEventDetails[kel]){
+            updateDetails[kel] = this.oldEventDetails[kel]
+          }
+        }
+         axios.put(`https://bcc-backend.herokuapp.com/events/update/${id}/`,
+            updateDetails,
+          {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}`
+        }
+        }).then((val)=>{
+          console.log(val)
+        }).catch((err)=>{
+          console.log(err)
+        }).finally(()=>{
+          this.isLoading = false
+        })
        },
        createEvent () {
          this.createShow = true
        },
-      updateEvent () {
+       localEventUpdate (event) {
+            this.selectedEventDetails.id = event.id
+            this.selectedEventDetails.name = event.name
+            this.selectedEventDetails.location = event.venue
+            this.selectedEventDetails.description = event.description
+            this.selectedEventDetails.time = event.time
+            this.selectedEventDetails.capacity = event.capacity
+             this.selectedEventDetails.photo = event.photo_url
+       },
+      updateEvent (event) {
+        this.localEventUpdate(event)
         this.editShow = !this.editShow
         console.log('Update')
+      },
+      showEventPic (url) {
+        this.pictureShow = true
+        this.pictureUrl = url
       },
       closing () {
         this.show = false
         this.editShow= false
         this.createShow = false
+         this.pictureShow = false
       },
-      deleteSingleEvent () {
-
+      deleteSingleEvent (id) {
+        this.isLoading = true
+        console.log(sessionStorage.getItem('accessToken'))
+        axios.get(`https://bcc-backend.herokuapp.com/events/delete/${id}/`,
+          {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}`
+        }
+        }).then((val)=>{
+          console.log(val)
+        }).catch((err)=>{
+          console.log(err)
+        }).finally(()=>{
+          this.isLoading = false
+        })
       }
     },
+   beforeRouteEnter (to, from, next) {
+         next( vm => {
+             vm.fetchEvents()
+         })
+    },
     mounted :function ()  {
-     
     }
   }
 </script>
 <style>
+.modal.show{
+  background-color:aliceblue;
+}
 </style>
