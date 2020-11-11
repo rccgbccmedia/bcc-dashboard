@@ -414,46 +414,65 @@
        },
        updateSingleEvent (id) {
          this.isLoading = true
+        let formattedDate = ''
          let updateDetails = {
            
         } 
-         console.log(this.selectedEventDetails)
-        console.log(this.oldEventDetails.theDate)
-         console.log(this.oldEventDetails.theTime)
-        for(let kel in this.oldEventDetails){
-          if(this.oldEventDetails[kel]){
-            updateDetails[kel] = this.oldEventDetails[kel]
+        let localDetail = {
+          'name':  this.oldEventDetails.name,
+          'venue': this.oldEventDetails.venue,
+          'description': this.oldEventDetails.description,
+          'capacity': this.oldEventDetails.capacity,
+          'photo_url': this.oldEventDetails.photo_url
+        }
+        let arrayArt = [this.oldEventDetails.theDate, this.oldEventDetails.theTime]
+
+          if(arrayArt[0] && arrayArt[1]){
+            formattedDate = `${arrayArt[0]}T${arrayArt[1]}:00Z`
+            localDetail['time'] = formattedDate
+          }else if (arrayArt[0] && !arrayArt[1]){
+            formattedDate = `${arrayArt[0]}T${this.selectedEventDetails.theTime}:00Z`
+              localDetail['time'] = formattedDate
+          }else if (!arrayArt[0] && arrayArt[1]){
+           formattedDate = `${this.selectedEventDetails.theDate}T${arrayArt[1]}:00Z`
+             localDetail['time'] = formattedDate
+          }else if (!arrayArt[0] && !arrayArt[1]){
+            console.log('none')
+          }
+        
+        for(let kel in localDetail){
+          if(localDetail[kel]){
+            updateDetails[kel] = localDetail[kel]
           }
         }
-        console.log(updateDetails, this.oldEventDetails, id)
-        //  axios.put(`https://bcc-backend.herokuapp.com/events/update/${id}/`,
-        //     updateDetails,
-        //   {
-        // headers: {
-        //   'Content-Type': 'application/json',
-        //   'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}`
-        // }
-        // }).then((val)=>{
-        //   console.log(val)
-        //   if(val.status == '200'){
-        //     this.editSuccess = true
-        //     this.fetchEvents()
-        //     setTimeout(() => {
-        //       this.closing()
-        //       this.editSuccess = false
-        //     }, 1500);
-        //   }
-        // }).catch((err)=>{
-        //   if(err.request.status == '401'){
-        //     this.login = true
-        //     setTimeout(() => {
-        //       this.login = false
-        //        this.$router.push('login')
-        //     }, 1090);
-        //   }
-        // }).finally(()=>{
-        //   this.isLoading = false
-        // })
+         axios.put(`https://bcc-backend.herokuapp.com/events/update/${id}/`,
+            updateDetails,
+          {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}`
+        }
+        }).then((val)=>{
+          console.log(val)
+          if(val.status == '200'){
+            this.editSuccess = true
+            this.fetchEvents()
+            setTimeout(() => {
+              this.closing()
+              this.editSuccess = false
+            }, 1500);
+          }
+        }).catch((err)=>{
+          if(err.request.status == '401'){
+            this.login = true
+            setTimeout(() => {
+              this.login = false
+               this.$router.push('login')
+            }, 1090);
+          }
+        }).finally(()=>{
+          this.isLoading = false
+        })
        },
        createEvent () {
          this.createShow = true
