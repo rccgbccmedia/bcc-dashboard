@@ -42,12 +42,12 @@
                             <span class="nav-link-inner--text">Login</span>
                         </router-link>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <router-link class="nav-link nav-link-icon" to="/profile">
                             <i class="ni ni-single-02"></i>
                             <span class="nav-link-inner--text">Profile</span>
                         </router-link>
-                    </li>
+                    </li> -->
                 </ul>
             </template>
         </base-nav>

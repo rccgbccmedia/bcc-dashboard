@@ -43,7 +43,8 @@
                        <template>
                         <h3><strong>Venue: </strong>{{event.venue}}</h3>
                         <h3><strong>Description: </strong>{{event.description}} </h3>
-                         <h3><strong>Time: </strong>{{formatter(event.time)}} </h3>
+                         <h3><strong>Date: </strong>{{formatDate(event.time)}} </h3>
+                         <h3><strong>Time: </strong>{{formatTime(event.time)}} </h3>
                           <h3><strong>Capacity: </strong>{{event.capacity}}</h3>
                           <div v-show="event.photo_url">
                             <button class="btn border bg-gradient-primary text-light" @click="showEventPic(event.photo_url)">Photo</button>
@@ -82,14 +83,19 @@
         <!-- Picture Modal end -->
         <!-- Delete modal start -->
         <baseModal :show='show' v-on:close="closing" class="text-center" gradient="secondary">
+        <div class="alert bg-gradient-success text-dark" role="alert" v-show="deleteSuccess">
+            <h4 class="alert-heading top-text">Congrats!</h4>
+            <p class="top-text">Event deleted successfully!!</p>
+          </div>
           <template v-slot:header>
              <h2 class="text-center mx-auto">Are you sure? View the details below</h2>    
           </template>
           <template>
             <h1 class="lead">{{selectedEventDetails.name}}</h1>
-             <h3><strong>Venue: </strong>{{selectedEventDetails.location}} </h3>
+             <h3><strong>Venue: </strong>{{selectedEventDetails.venue}} </h3>
               <h3><strong>Description: </strong>{{selectedEventDetails.description}} </h3>
-              <h3 ><strong>Time: </strong>{{selectedEventDetails.time}} </h3>
+              <h3 ><strong>Date: </strong>{{selectedEventDetails.theDate}} </h3>
+              <h3 ><strong>Time: </strong>{{selectedEventDetails.theTime}} </h3>
               <h3><strong>Capacity: </strong>{{selectedEventDetails.capacity}} </h3>  
           </template>
           <template v-slot:footer>
@@ -105,32 +111,52 @@
           </template>
           <template  >
             <div class="text-light">
+                   <div class="alert bg-gradient-success text-dark" role="alert" v-show="editSuccess">
+            <h4 class="alert-heading top-text">Congrats!</h4>
+            <p class="top-text">Event created successfully!!</p>
+          </div>
+          <div class="alert bg-gradient-danger text-dark" role="alert" v-show="login">
+            <h4 class="alert-heading top-text">Session Expired</h4>
+            <p class="top-text">Please Login Again</p>
+          </div>
                  <base-input class="input-group-alternative mb-3"
                               :placeholder="selectedEventDetails.name" required
                               addon-left-icon="ni ni-caps-small"
+                              type="text"
                               v-model="oldEventDetails.name">
                   </base-input>
                   <base-input class="input-group-alternative mb-3"
-                              :placeholder="selectedEventDetails.location"
+                              :placeholder="selectedEventDetails.venue"
                               addon-left-icon="ni ni-square-pin"
-                              v-model="oldEventDetails.location">
+                               type="text"
+                              v-model="oldEventDetails.venue">
                   </base-input>
                   <base-input class="input-group-alternative mb-3"
                               :placeholder="selectedEventDetails.description" required
                               addon-left-icon="ni ni-align-left-2"
+                               type="text"
                               v-model="oldEventDetails.description">
                   </base-input>
                   <base-input class="input-group-alternative mb-3"
-                              :placeholder="selectedEventDetails.time" required
+                              :placeholder="selectedEventDetails.theDate" required
+                              addon-left-icon="ni ni-calendar-grid-58"
+                               type="date"
+                              v-model="oldEventDetails.theDate">
+                  </base-input>
+                  <base-input class="input-group-alternative mb-3"
+                              :placeholder="selectedEventDetails.theTime" required
                               addon-left-icon="ni ni-watch-time"
-                              v-model="oldEventDetails.time">
+                               type="time"
+                              v-model="oldEventDetails.theTime">
                   </base-input>
                 <base-input class="input-group-alternative mb-3"
                               :placeholder="selectedEventDetails.capacity"
                               addon-left-icon="ni ni-single-02"
+                               type="number"
                               v-model="oldEventDetails.capacity">
                   </base-input>
                   <base-input class="input-group-alternative mb-3"
+                   type="text"
                               :placeholder="selectedEventDetails.photo"
                               addon-left-icon="ni ni-camera-compact"
                               v-model="oldEventDetails.photo_url">
@@ -139,7 +165,7 @@
           </template>
           <template v-slot:footer>
                <button class="btn border bg-gradient-warning text-light" @click="updateSingleEvent(selectedEventDetails.id)">Update Event</button>
-                <button class="btn border bg-gradient-info text-light" @click="closing">Go Back</button>
+                <button class="btn border bg-gradient-info text-light" @click="resetForm">Go Back</button>
             </template>
         </baseModal>
         <!-- Edit Modal End -->
@@ -151,39 +177,64 @@
           <template >
             <div class="text-light">
               <form role="form">
+                 <div class="alert bg-gradient-success text-dark" role="alert" v-show="success">
+            <h4 class="alert-heading top-text">Congrats!</h4>
+            <p class="top-text">Event created successfully!!</p>
+          </div>
+           <div class="alert bg-gradient-danger text-dark" role="alert" v-show="incomplete">
+            <h4 class="alert-heading top-text">Sorry, Please Note</h4>
+            <p class="top-text">Event name, time, date, description and capacity are all required fields</p>
+          </div>
+          <div class="alert bg-gradient-danger text-dark" role="alert" v-show="login">
+            <h4 class="alert-heading top-text">Session Expired</h4>
+            <p class="top-text">Please Login Again</p>
+          </div>
                   <base-input class="input-group-alternative mb-3"
                               placeholder="Event Name" required
+                              type="text"
                               addon-left-icon="ni ni-caps-small"
                               v-model="newEventDetails.name">
                   </base-input>
                    <base-input class="input-group-alternative mb-3"
                               placeholder="Event Location"
+                               type="text"
                               addon-left-icon="ni ni-square-pin"
-                              v-model="newEventDetails.location">
+                              v-model="newEventDetails.venue">
                   </base-input>
                    <base-input class="input-group-alternative mb-3"
                               placeholder="Event Description" required
                               addon-left-icon="ni ni-align-left-2"
+                               type="text"
                               v-model="newEventDetails.description">
+                  </base-input>
+                   <base-input class="input-group-alternative mb-3"
+                              placeholder="Event Date" required='true'
+                               type="date"
+                              addon-left-icon="ni ni-calendar-grid-58"
+                              v-model="newEventDetails.date">
                   </base-input>
                   <base-input class="input-group-alternative mb-3"
                               placeholder="Event Time" required
+                               type="time"
                               addon-left-icon="ni ni-watch-time"
                               v-model="newEventDetails.time">
                   </base-input>
                   <base-input class="input-group-alternative mb-3"
                               placeholder="Event Capacity"
+                               type="number"
                               addon-left-icon="ni ni-single-02"
                               v-model="newEventDetails.capacity">
                   </base-input>
                   <base-input class="input-group-alternative mb-3"
                               placeholder="Available Seats"
+                                type="number"
                               addon-left-icon="ni ni-tag"
                               readonly
                               v-model="newEventDetails.seats">
                   </base-input>
                   <base-input class="input-group-alternative mb-3"
                               placeholder="Link to Image"
+                                type="text"
                               addon-left-icon="ni ni-camera-compact"
                               v-model="newEventDetails.photo">
                   </base-input>
@@ -216,13 +267,20 @@
         editShow: false,
         pictureShow: false,
         pictureUrl: '',
+        editSuccess: false,
+        success: false,
+        deleteSuccess: false,
+        login: false,
+        incomplete: false,
         returnedEvents: [],
         selectedEventDetails: {
           id: '',
           name: '',
-          location: '',
+          venue: '',
           description: '',
           time: '',
+          theDate: '',
+          theTime: '',
           capacity: '',
           seats: '',
           photo: ''
@@ -232,9 +290,11 @@
         shadow: true,
         oldEventDetails: {
            name: '',
-          location: '',
+          venue: '',
           description: '',
           time: '',
+          theTime: '',
+          theDate: '',
           capacity: '',
           seats: '',
           photo_url: ''
@@ -243,9 +303,10 @@
           name: '',
           location: '',
           description: '',
+          date: '',
           time: '',
           capacity: '',
-          seats: '',
+          seats: '230',
           photo: ''
         }
       }
@@ -257,10 +318,21 @@
       }
     },
     methods : {
-       formatter(date) {
-         let theDate = date.split('T')
-         console.log(theDate)
-      return moment().format(theDate[0])
+      resetForm () {
+        for(let el in this.oldEventDetails){
+          this.oldEventDetails[el] = ''
+        }
+        this.closing()
+      },
+       formatDate(date) {
+         let theFullDate = date.split('T')
+      return moment().format(theFullDate[0])
+    },
+    formatTime(date) {
+        let theFullDate = date.split('T')
+        let theTime = theFullDate[1].split(':')
+        theTime.pop()
+        return moment(`${parseInt(theTime[0])},${parseInt(theTime[1])}`, "hh, mm").format('LT')
     },
        deleteEvent (event) {
          this.show = !this.show
@@ -285,13 +357,15 @@
         })
        },
        createSingleEvent () {
-           if(this.newEventDetails.name!=='' && this.newEventDetails.time!=='' && this.newEventDetails.description!==''){
+           if(this.newEventDetails.name!=='' && this.newEventDetails.date!==''  && this.newEventDetails.time!=='' && this.newEventDetails.description!=='' && this.newEventDetails.capacity!==''){
+               this.isLoading = true
              console.log(sessionStorage.getItem('accessToken'))
+               let formattedDate = `${this.newEventDetails.date}T${this.newEventDetails.time}:00Z`
             axios.post('https://bcc-backend.herokuapp.com/events/create/',
             {
               'name': this.newEventDetails.name,
               'venue': this.newEventDetails.venue,
-              'time': this.newEventDetails.time,
+              'time': formattedDate,
               'capacity': this.newEventDetails.capacity,
               'seats': this.newEventDetails.seats,
               'description': this.newEventDetails.description,
@@ -304,10 +378,37 @@
         }
         }).then((val)=>{
           console.log(val)
+            this.isLoading = false
+          if(val.status == 201) {
+            this.success = true
+            this.fetchEvents()
+                this.newEventDetails.name = ''
+                this.newEventDetails.venue = ''
+                this.newEventDetails.capacity = ''
+                this.newEventDetails.time = ''
+                this.newEventDetails.description = ''
+                this.newEventDetails.photo = ''
+                setTimeout(() => {
+                  this.closing()
+                   this.success = false
+                }, 1500);
+          }
         }).catch((err)=>{
-          console.log(err)
+          console.log({err})
+            this.isLoading = false
+          if(err.request.status == '401'){
+            this.login = true
+            setTimeout(() => {
+              this.login = false
+               this.$router.push('login')
+            }, 1090);
+          }
         })
         } else {
+          this.incomplete = true
+          setTimeout(() => {
+            this.incomplete = false
+          }, 2590);
            console.log('Go away')
         }
        },
@@ -316,37 +417,57 @@
          let updateDetails = {
            
         } 
+         console.log(this.selectedEventDetails)
+        console.log(this.oldEventDetails.theDate)
+         console.log(this.oldEventDetails.theTime)
         for(let kel in this.oldEventDetails){
           if(this.oldEventDetails[kel]){
             updateDetails[kel] = this.oldEventDetails[kel]
           }
         }
-         axios.put(`https://bcc-backend.herokuapp.com/events/update/${id}/`,
-            updateDetails,
-          {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}`
-        }
-        }).then((val)=>{
-          console.log(val)
-        }).catch((err)=>{
-          console.log(err)
-        }).finally(()=>{
-          this.isLoading = false
-        })
+        console.log(updateDetails, this.oldEventDetails, id)
+        //  axios.put(`https://bcc-backend.herokuapp.com/events/update/${id}/`,
+        //     updateDetails,
+        //   {
+        // headers: {
+        //   'Content-Type': 'application/json',
+        //   'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}`
+        // }
+        // }).then((val)=>{
+        //   console.log(val)
+        //   if(val.status == '200'){
+        //     this.editSuccess = true
+        //     this.fetchEvents()
+        //     setTimeout(() => {
+        //       this.closing()
+        //       this.editSuccess = false
+        //     }, 1500);
+        //   }
+        // }).catch((err)=>{
+        //   if(err.request.status == '401'){
+        //     this.login = true
+        //     setTimeout(() => {
+        //       this.login = false
+        //        this.$router.push('login')
+        //     }, 1090);
+        //   }
+        // }).finally(()=>{
+        //   this.isLoading = false
+        // })
        },
        createEvent () {
          this.createShow = true
        },
        localEventUpdate (event) {
-            this.selectedEventDetails.id = event.id
-            this.selectedEventDetails.name = event.name
-            this.selectedEventDetails.location = event.venue
-            this.selectedEventDetails.description = event.description
-            this.selectedEventDetails.time = event.time
-            this.selectedEventDetails.capacity = event.capacity
-             this.selectedEventDetails.photo = event.photo_url
+          this.selectedEventDetails.theTime = this.formatTime(event.time)
+          this.selectedEventDetails.theDate = this.formatDate(event.time)
+          this.selectedEventDetails.id = event.id
+          this.selectedEventDetails.name = event.name
+          this.selectedEventDetails.venue = event.venue
+          this.selectedEventDetails.description = event.description
+          this.selectedEventDetails.time = event.time
+          this.selectedEventDetails.capacity = event.capacity
+          this.selectedEventDetails.photo = event.photo_url
        },
       updateEvent (event) {
         this.localEventUpdate(event)
@@ -373,9 +494,23 @@
           'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}`
         }
         }).then((val)=>{
-          console.log(val)
+          if(val.status == 204) {
+            this.deleteSuccess = true
+            this.fetchEvents()
+                setTimeout(() => {
+                  this.closing()
+                   this.deleteSuccess = false
+                }, 1500);
+          }
         }).catch((err)=>{
-          console.log(err)
+          console.log({err})
+            if(err.request.status == '401'){
+            this.login = true
+            setTimeout(() => {
+              this.login = false
+               this.$router.push('login')
+            }, 1090);
+          }
         }).finally(()=>{
           this.isLoading = false
         })
