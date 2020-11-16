@@ -36,6 +36,11 @@ export default new Router({
           component: () => import(/* webpackChunkName: "demo" */ './views/Gallery.vue')
         },
         {
+          path: '/videos',
+          name: 'videos',
+          component: () => import(/* webpackChunkName: "demo" */ './views/Videos.vue')
+        },
+        {
           path: '/events',
           name: 'events',
           component: () => import(/* webpackChunkName: "demo" */ './views/events.vue')

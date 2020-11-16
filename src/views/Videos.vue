@@ -4,9 +4,9 @@
             <!-- Card stats -->
             <div class="row justify-content-center">
                 <div class="col-xl-3 col-lg-6">
-                    <stats-card title="Total Images"
+                    <stats-card title="Total Videos"
                                 type="gradient-green"
-                                :sub-title="totalImages"
+                                :sub-title="totalVideos"
                                 icon="ni ni-image"
                                 class="mb-4 mb-xl-0"
                     >
@@ -25,20 +25,17 @@
 
          <div class="container-fluid">
             <!--Event Card-->
-              <div class="row row-cols-1 row-cols-md-2 justify-content-center">
-                <template v-for="image in returnedImages">
-                <div class="col-sm-10 col-md-4 mb-4" :key="image.id">
-                   <theCard gradient="light" shadow='true' hover='true'>
-                       <template>
-                         <img :src="formatLink(image.url)" class="card-img-top">
-                      </template>
-                       <template v-slot:footer>
-                        <div class="row justify-content-between">
-                            <button class="col-sm-4 btn btn-sm border bg-gradient-danger text-light" @click="deleteImage(image.id)">Delete</button>
+              <div class="row row-cols-1 justify-content-center mt-4">
+                <template v-for="video in returnedVideos">
+                <div class="col-sm-10 col-md-3 mb-4 mx-4" :key="video.id">
+                  <div class="mx-4">
+                      <iframe :src="formatLink(video.url)" height="250px" class="formatLink(video.url)" allow="fullscreen" allowfullscreen>
+                  </iframe>
+                  <div class="row justify-content-center">
+                            <button class="col-sm-4 btn btn-sm border bg-gradient-danger text-light" @click="deleteVideo(video.id)">Delete</button>
                         </div>
-                      </template>
-                   </theCard>
                 </div>
+                  </div>
                 </template>
               </div>
          </div>
@@ -53,7 +50,7 @@
         <baseModal :show="deleteSuccess" v-on:close="closing" class="text-center" gradient="success">
         <div class="alert text-dark" role="alert" >
             <h4 class="alert-heading top-text">Congrats!</h4>
-            <p class="top-text">Image deleted successfully!!</p>
+            <p class="top-text">Video deleted successfully!!</p>
           </div>
         </baseModal>
            <!-- Delete modal end -->
@@ -74,7 +71,7 @@
                               addon-left-icon="ni ni-image"
                               v-model="theUrl">
                   </base-input>
-                  <button class="btn border bg-gradient-success text-light" @click="addNewImage()">Add Image</button>
+                  <button class="btn border bg-gradient-success text-light" @click="addNewVideo()">Add Video</button>
                   <button class="btn border bg-gradient-danger text-light" @click="closing">Discard</button>
               </div>
           </baseModal>
@@ -92,13 +89,14 @@
     </div>
 </template>
 <script>
-  import theCard from '../components/Card'
+  // import theCard from '../components/Card'
   import baseModal from '../components/Modal'
   import axios from 'axios'
   export default {
-    name: 'gallery',
+    name: 'videos',
     components: {
-      theCard, baseModal
+      // theCard,
+       baseModal
     },
      data() {
       return {
@@ -108,7 +106,7 @@
           isLoading: false,
           login: false,
           deleteSuccess: false,
-          returnedImages: [],
+          returnedVideos: [],
           theUrl: ''
       }
      },
@@ -116,11 +114,14 @@
      },
      methods: {
        formatLink(oldLink){
-         let rems = oldLink.split('/')
-         console.log(rems)
-         return `https://drive.google.com/uc?id=${rems[5]}`
+         // https://drive.google.com/uc?id=1H8upJ-vM3lAeEcEiB3wTRgE5ZiYH_kl-
+         // https://www.youtube.com/watch?v=3rDdlnBzjqo&list=PLx7egWetVxP4Dbo5oUaTWzN4F_3NnxecP&index=1
+         let rems = oldLink.split('=')
+         let val = rems[1].split('&')
+         console.log(val)
+         return `https://www.youtube.com/embed/${val[0]}`
        },
-       addNewImage(){
+       addNewVideo(){
          console.log(this.theUrl)
           axios.post('https://bcc-backend.herokuapp.com/images/add/',
             {
@@ -137,7 +138,7 @@
           if(val.status == 201) {
             this.adding = false
             this.addSuccess = true
-            this.fetchImages()
+            this.fetchVideos()
                 this.theUrl = ''
                 setTimeout(() => {
                   this.closing()
@@ -164,17 +165,17 @@
           this.adding = false
         })
        },
-       fetchImages(){
+       fetchVideos(){
          this.isLoading = true
-          axios.get('https://bcc-backend.herokuapp.com/images/all/',
+          axios.get('https://bcc-backend.herokuapp.com/videos/all/',
             {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `${sessionStorage.getItem('accessToken')}`
           }
           }).then((result) => {
-           // console.log(result)
-            this.returnedImages = result.data
+            console.log(result)
+            this.returnedVideos = result.data
           }).catch((err)=>{
             console.log({err})
           }).finally(()=>{
@@ -185,9 +186,9 @@
           this.theUrl = ''
           this.adding =  this.deleteSuccess  =  this.isLoading =  this.login = this.errorOccured = false
       },
-       deleteImage (imageId) {
+       deleteVideo (videoId) {
            this.isLoading = true
-        axios.get(`https://bcc-backend.herokuapp.com/images/delete/${imageId}/`,
+        axios.get(`https://bcc-backend.herokuapp.com/videos/delete/${videoId}/`,
           {
         headers: {
           'Content-Type': 'application/json',
@@ -196,7 +197,7 @@
         }).then((val)=>{
           if(val.status == 204) {
             this.deleteSuccess = true
-            this.fetchImages()
+            this.fetchVideos()
                 setTimeout(() => {
                   this.closing()
                    this.deleteSuccess = false
@@ -217,14 +218,14 @@
        }
      },
     computed: {
-      totalImages: function() {
-        let count = this.returnedImages.length
+      totalVideos: function() {
+        let count = this.returnedVideos.length
         return count
       }
     },
       beforeRouteEnter (to, from, next) {
          next( vm => {
-             vm.fetchImages()
+             vm.fetchVideos()
          })
     },
   };
