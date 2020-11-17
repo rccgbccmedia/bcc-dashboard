@@ -15,9 +15,9 @@
                     <base-dropdown class="nav-item" position="right">
                         <a slot="title" class="nav-link" href="#" role="button">
                             <div class="media align-items-center">
-                              <span class="avatar avatar-sm rounded-circle">
-                                <img alt="Image placeholder" src="img/theme/team-1-800x800.jpg">
-                              </span>
+                                <span class="">
+                                  <i class="ni ni-circle-08"></i>
+                                </span>
                             </div>
                         </a>
                         <a href="#!" class="dropdown-item">

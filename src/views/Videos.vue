@@ -66,7 +66,7 @@
           <baseModal :show="adding" v-on:close="closing" class="text-center" gradient="success">
               <div>
                    <base-input class="input-group-alternative mb-3"
-                              placeholder="Input Image Link" required
+                              placeholder="Input Video Link" required
                               type="text"
                               addon-left-icon="ni ni-image"
                               v-model="theUrl">
@@ -118,12 +118,11 @@
          // https://www.youtube.com/watch?v=3rDdlnBzjqo&list=PLx7egWetVxP4Dbo5oUaTWzN4F_3NnxecP&index=1
          let rems = oldLink.split('=')
          let val = rems[1].split('&')
-         console.log(val)
          return `https://www.youtube.com/embed/${val[0]}`
        },
        addNewVideo(){
          console.log(this.theUrl)
-          axios.post('https://bcc-backend.herokuapp.com/images/add/',
+          axios.post('https://bcc-backend.herokuapp.com/videos/add/',
             {
               'url': this.theUrl
             },

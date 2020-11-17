@@ -117,7 +117,6 @@
      methods: {
        formatLink(oldLink){
          let rems = oldLink.split('/')
-         console.log(rems)
          return `https://drive.google.com/uc?id=${rems[5]}`
        },
        addNewImage(){
@@ -173,7 +172,7 @@
             'Authorization': `${sessionStorage.getItem('accessToken')}`
           }
           }).then((result) => {
-           // console.log(result)
+            console.log(result)
             this.returnedImages = result.data
           }).catch((err)=>{
             console.log({err})

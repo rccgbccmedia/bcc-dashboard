@@ -11,11 +11,11 @@ module.exports = {
     ]
   },
   pwa: {
-    name: 'Vue Argon Dashboard',
-    themeColor: '#172b4d',
-    msTileColor: '#172b4d',
+    name: 'Bethel Christian Center Dashboard',
+    themeColor: '#4637b0',
+    msTileColor: '#4637b0',
     appleMobileWebAppCapable: 'yes',
-    appleMobileWebAppStatusBarStyle: '#172b4d'
+    appleMobileWebAppStatusBarStyle: '#4637b0'
   },
   css: {
     // Enable CSS source maps.
