@@ -10,7 +10,7 @@
           </h3>
         </div>
         <div class="col text-right">
-          <base-button type="primary" size="sm">Add User</base-button>
+          <base-button type="primary" size="sm" @click="showForm">Add User</base-button>
         </div>
       </div>
     </div>
@@ -28,20 +28,18 @@
         <template slot-scope="{row}">
        
           <td >
-            {{row.first}} {{row.last}}
+            {{row.first_name}}  {{row.last_name}}
           </td>
           <td>
               {{row.email}}
           </td>
           <td>
-             {{row.number}}
+             {{row.phone}}
           </td>
-           {{row.address}}
           <td>
-              {{row.password}}
-          </td>
-
-          <td class="text-right">
+           {{row.address}}
+           </td>
+          <!-- <td class="text-right">
             <base-dropdown class="dropdown"
                            position="right">
               <a slot="title" class="btn btn-sm btn-icon-only text-light" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -49,16 +47,24 @@
               </a>
 
               <template>
-                <a class="dropdown-item" href="#">Update Details</a>
-                <a class="dropdown-item" href="#">Delete User</a>
+                <a class="dropdown-item" @click="updateUser(row)">Update Details</a>
               </template>
             </base-dropdown>
-          </td>
+          </td> -->
 
         </template>
 
       </base-table>
     </div>
+    <baseModal :show='formVisible' v-on:close="closing" class="text-center" gradient="secondary">
+          <template>
+            <theCard gradient="transparent" shadow='true' hover='true' :class="{'mt-3':true , 'pt-3': true}">
+              <template>
+                fskf;sfm
+            </template>
+              </theCard>
+          </template>
+        </baseModal>
 <!-- 
     <div class="card-footer d-flex justify-content-end"
          :class="type === 'dark' ? 'bg-transparent': ''">
@@ -68,8 +74,13 @@
   </div>
 </template>
 <script>
+ import baseModal from '../Tables/ProjectsTable.vue'
+  import axios from 'axios'
   export default {
     name: 'projects-table',
+    components: {
+      baseModal
+    },
     props: {
       type: {
         type: String
@@ -84,6 +95,15 @@
     },
     data() {
       return {
+        formVisible: false
+      }
+    },
+    methods:{
+      showForm(){
+        this.formVisible = true
+      },
+      closing(){
+         this.formVisible = false
       }
     }
   }

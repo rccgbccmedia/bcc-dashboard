@@ -14,7 +14,7 @@
           }"
         />
 
-        <sidebar-item :link="{name: 'Icons', icon: 'ni ni-planet text-blue', path: '/icons'}"/>
+        <!-- <sidebar-item :link="{name: 'Icons', icon: 'ni ni-planet text-blue', path: '/icons'}"/> -->
         <sidebar-item :link="{name: 'Events', icon: 'ni ni-building text-orange', path: '/events'}"/>
         <sidebar-item :link="{name: 'Videos', icon: 'ni ni-button-play', path: '/videos'}"/>
         <sidebar-item :link="{name: 'Gallery', icon: 'ni ni-image text-info', path: '/gallery'}"/>

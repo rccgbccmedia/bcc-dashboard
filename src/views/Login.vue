@@ -93,7 +93,7 @@ import axios from 'axios'
              this.$router.push('dashboard')
           }, 3500)
       }).catch((err) => {
-        console.log(err)
+        console.log({err})
         this.loginError = true
       }).finally(() => {
         setTimeout(()=>{

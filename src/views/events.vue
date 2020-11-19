@@ -46,6 +46,8 @@
                          <h3><strong>Date: </strong>{{formatDate(event.time)}} </h3>
                          <h3><strong>Time: </strong>{{formatTime(event.time)}} </h3>
                           <h3><strong>Capacity: </strong>{{event.capacity}}</h3>
+                            <h3><strong>Seats: </strong>{{event.seats}}</h3>
+                            <h3><strong>Number of Registered Members: </strong> Null</h3>
                           <div v-show="event.photo_url">
                             <button class="btn border bg-gradient-primary text-light" @click="showEventPic(event.photo_url)">Photo</button>
                           </div>
@@ -96,7 +98,8 @@
               <h3><strong>Description: </strong>{{selectedEventDetails.description}} </h3>
               <h3 ><strong>Date: </strong>{{selectedEventDetails.theDate}} </h3>
               <h3 ><strong>Time: </strong>{{selectedEventDetails.theTime}} </h3>
-              <h3><strong>Capacity: </strong>{{selectedEventDetails.capacity}} </h3>  
+              <h3><strong>Capacity: </strong>{{selectedEventDetails.capacity}} </h3>
+               <h3><strong>Seats: </strong>{{selectedEventDetails.seats}} </h3>  
           </template>
           <template v-slot:footer>
                <button class="btn border bg-gradient-warning text-light" @click="deleteSingleEvent(selectedEventDetails.id)">Delete Event</button>
@@ -154,6 +157,12 @@
                               addon-left-icon="ni ni-single-02"
                                type="number"
                               v-model="oldEventDetails.capacity">
+                  </base-input>
+                  <base-input class="input-group-alternative mb-3"
+                              :placeholder="selectedEventDetails.seats"
+                              addon-left-icon="ni ni-tag"
+                               type="number"
+                              v-model="oldEventDetails.seats">
                   </base-input>
                   <base-input class="input-group-alternative mb-3"
                    type="text"
@@ -306,7 +315,7 @@
           date: '',
           time: '',
           capacity: '',
-          seats: '230',
+          seats: '',
           photo: ''
         }
       }
@@ -339,7 +348,23 @@
         this.localEventUpdate(event)
         console.log('Delete')
        },
-       fetchEvents () {
+      //  fetchSingleEventDetails(event){
+      //      axios.get(`https://bcc-backend.herokuapp.com/rsvp/${event.id}/`,
+      //     {
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}`
+      //   }
+      //   }).then((result) => {
+      //     console.log(result)
+      //     return result.data.length
+      //   }).catch((err)=>{
+      //     console.log(err)
+      //   }).finally(()=>{
+          
+      //   })
+      //  },
+      fetchEvents () {
         this.isLoading = true
         axios.get('https://bcc-backend.herokuapp.com/events/all/',
           {
@@ -350,6 +375,11 @@
         }).then((result) => {
           console.log(result)
           this.returnedEvents = result.data
+        //  this.returnedEvents.map(event => {
+        //    let val =  this.fetchSingleEventDetails(event)
+        //    console.log(val)
+        //   })
+          console.table(this.returnedEvents)
         }).catch((err)=>{
           console.log(err)
         }).finally(()=>{
@@ -388,6 +418,7 @@
                 this.newEventDetails.time = ''
                 this.newEventDetails.description = ''
                 this.newEventDetails.photo = ''
+                this.newEventDetails.seats = ''
                 setTimeout(() => {
                   this.closing()
                    this.success = false
@@ -423,7 +454,8 @@
           'venue': this.oldEventDetails.venue,
           'description': this.oldEventDetails.description,
           'capacity': this.oldEventDetails.capacity,
-          'photo_url': this.oldEventDetails.photo_url
+          'photo_url': this.oldEventDetails.photo_url,
+          'seats':  this.oldEventDetails.seats
         }
         let arrayArt = [this.oldEventDetails.theDate, this.oldEventDetails.theTime]
 
@@ -487,6 +519,7 @@
           this.selectedEventDetails.time = event.time
           this.selectedEventDetails.capacity = event.capacity
           this.selectedEventDetails.photo = event.photo_url
+           this.selectedEventDetails.seats = event.seats
        },
       updateEvent (event) {
         this.localEventUpdate(event)

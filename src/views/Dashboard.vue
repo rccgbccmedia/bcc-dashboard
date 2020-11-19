@@ -6,7 +6,7 @@
                 <div class="col-xl-3 col-lg-6" title="View all Users">
                     <stats-card title="Total Registered Users"
                                 type="gradient-green"
-                                sub-title="32,000"
+                                :sub-title="tableData.length"
                                 icon="ni ni-single-02"
                                 class="mb-4 mb-xl-0"
                     >
@@ -28,7 +28,7 @@
             <!--Tables-->
             <div class="row">
                 <div class="col">
-                    <!-- <projects-table type="dark" title="All Regsitered Users" :tableData='returnedEvents' :heads='columns'></projects-table> -->
+                    <projects-table type="dark" title="All Regsitered Users" :tableData='tableData' :heads='columns'></projects-table>
                 </div>
             </div>
             <!--End tables-->
@@ -44,58 +44,44 @@
 </template>
 <script>
   // Charts
- // import ProjectsTable from './Tables/ProjectsTable'
+  import ProjectsTable from './Tables/ProjectsTable'
   import axios from 'axios'
    import baseModal from '../components/Modal'
   export default {
     components: {
-      baseModal
-      // ProjectsTable
+      baseModal,
+      ProjectsTable
     },
     data() {
       return {
-        columns: ['Name', 'Email', 'Number', 'Address', ' '],
+        columns: ['Name', 'Email', 'Phone', 'Address'],
         isLoading: false,
         totalEvents: [],
          tableData: [
-           {
-            first: 'Ade',
-            last: 'Jognson',
-            email: 'mail@yahoo.com',
-            number: '0923218994',
-            address: 'Lagos',
-            password: 'happyPl'
-          },
-           {
-            first: 'Ade',
-            last: 'Johnson',
-            email: 'mail@yahoo.com',
-            number: '0923218994',
-            address: 'Lagos',
-            password: 'happyPl'
-          },
-             {
-            first: 'Mide',
-            last: 'Jognson',
-            email: 'mail@yahoo.com',
-            number: '0923218994',
-            address: 'Lagos',
-            password: 'happyPl'
-          },
-             {
-            first: 'Loveth',
-            last: 'John',
-            email: 'mail@yahoo.com',
-            number: '0923218994',
-            address: 'Lagos',
-            password: 'happyPl'
-          }
+         
         ]
       };
     },
     methods: {
       fetchAllUserDetails () {
-       
+           this.isLoading = true
+        axios.get('https://bcc-backend.herokuapp.com/all-users/',
+          {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}`
+        }
+        }).then((result) => {
+          console.log(result)
+          this.tableData = result.data
+        }).catch((err)=>{
+          console.log({err})
+           if(err.request.status == '401'){
+               this.$router.push('login')
+           }
+        }).finally(()=>{
+           this.isLoading = false
+        })
       },
          fetchEvents () {
            this.isLoading = true
@@ -110,8 +96,7 @@
           this.totalEvents = result.data
         }).catch((err)=>{
           console.log(err)
-          // Custom error message should come here
-            this.$router.push('login')
+                
         }).finally(()=>{
            this.isLoading = false
         })
@@ -121,7 +106,7 @@
     
     },
     mounted() {
-    //  this.fetchAllUserDetails()
+    this.fetchAllUserDetails()
     this.fetchEvents()
     }
   };
