@@ -75,7 +75,6 @@
 </template>
 <script>
  import baseModal from '../Tables/ProjectsTable.vue'
-  import axios from 'axios'
   export default {
     name: 'projects-table',
     components: {
