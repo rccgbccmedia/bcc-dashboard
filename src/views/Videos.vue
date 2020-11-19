@@ -23,16 +23,16 @@
             </div>
         </base-header>
 
-         <div class="container-fluid">
+         <div class="container">
             <!--Event Card-->
-              <div class="row row-cols-1 justify-content-center mt-4">
+              <div class="row row-cols-1 row-cols-md-2 justify-content-center mt-4">
                 <template v-for="video in returnedVideos">
-                <div class="col-sm-10 col-md-3 mb-4 mx-4" :key="video.id">
+                <div class="col-sm-10 col-md-4 mb-4 mb-4 mx-4" :key="video.id">
                   <div class="mx-4">
-                      <iframe :src="formatLink(video.url)" height="250px" class="formatLink(video.url)" allow="fullscreen" allowfullscreen>
+                      <iframe :src="formatLink(video.url)" height="250px" allow="fullscreen" allowfullscreen>
                   </iframe>
                   <div class="row justify-content-center">
-                            <button class="col-sm-4 btn btn-sm border bg-gradient-danger text-light" @click="deleteVideo(video.id)">Delete</button>
+                            <button class="col btn btn-sm border bg-gradient-danger text-light" @click="deleteVideo(video.id)">Delete</button>
                         </div>
                 </div>
                   </div>

@@ -28,7 +28,7 @@
             <!--Tables-->
             <div class="row">
                 <div class="col">
-                    <projects-table type="dark" title="All Regsitered Users" :tableData='tableData' :heads='columns'></projects-table>
+                    <projects-table type="dark" title="All Regsitered Users" :tableData='tableData' :heads='columns' @showSpinner="toggleSpinner" @newUser="fetchAllUserDetails"></projects-table>
                 </div>
             </div>
             <!--End tables-->
@@ -82,6 +82,9 @@
         }).finally(()=>{
            this.isLoading = false
         })
+      },
+      toggleSpinner(truthy){
+        this.isLoading = truthy
       },
          fetchEvents () {
            this.isLoading = true
